@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendation</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/f6da1cf35b.js" crossorigin="anonymous"></script>
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <div class="header">
+        <h1>What to watch tonight</h1>
+    </div>
+    <div class="form">
+        <form>
+            <label for="genreSelector">Choose a genre</label>
+            <br>
+            <select name="genreSelector" id="genreSelector">
+                
+            </select>
+            <br>
+            <button class="submit" id="submit">Find a movie</button>
+        </form>
+    </div>
+    
+    <div class="movieDiv" id="movieDiv">
+
+    </div>
+    <div class="buttons">
+        <div class="dislike">
+            <p>Dislike movie</p>
+            <i class="fa-regular fa-thumbs-down fa-4x" style="color: #ffffff;" id="dislikeBtn"></i>
+        </div>
+        <div class="addToWatchList">
+            <p>Add to watchlist</p>
+            <i class="fa-solid fa-plus fa-4x" style="color: #ffffff;" id="addBtn"></i>
+        </div>
+        <div class="watchlist">
+            <p>Show Watchlist</p>
+            <i class="fa-solid fa-list fa-4x" style="color: #ffffff;" id="watchlistBtn"></i>
+        </div>
+        </div>
+       
+</body>
+</html>
