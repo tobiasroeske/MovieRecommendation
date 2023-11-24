@@ -38,7 +38,7 @@ const createOptionElements = async (genreArray) => {
 
 // Get a random Movie depending on Genre
 
-const randomMovieByGenre = async () => {
+const GetMoviesByGenre = async () => {
     const url = 'https://imdb8.p.rapidapi.com/title/v2/get-popular-movies-by-genre';
     const genreSelector = document.getElementById('genreSelector');
     const genre = genreSelector.ariaValueMax;
@@ -55,69 +55,74 @@ try {
 	const response = await fetch(`${url}${requiredParams}`, options);
 	if (response.ok) {
         const jsonResponse = await response.json();
-        const randomMovieIndex = Math.floor(Math.random() * jsonResponse.length);
-        const randomMovie = jsonResponse[randomMovieIndex];
-        const randomMovieId = randomMovie.slice(7, randomMovie.length -1);
-        console.log(randomMovieId);
-        return randomMovieId;
+        const movies = jsonResponse;
+        return movies;
     }
 } catch (error) {
 	console.error(error);
 }
+}
+
+const randomMovieId = (movies) => {
+    const randomMovieIndex = Math.floor(Math.random() * movies.length);
+        const randomMovie = movies[randomMovieIndex];
+        const randomMovieId = randomMovie.slice(7, randomMovie.length -1);
+        console.log(randomMovieId);
+        return randomMovieId;
 }
 
 // Get Movie title and poster url depending on Movie ID
 
 const getMovieDetails = async (randomMovieId) => {
+
     const url = 'https://imdb8.p.rapidapi.com/title/get-details';
     const requiredParams =`?tconst=${randomMovieId}`;
-const options = {
-	method: 'GET',
-	headers: {
+    const options = {
+	    method: 'GET',
+	    headers: {
 		'X-RapidAPI-Key': 'e8ccc402c3msh3e9dc3e37473cbfp1c12c2jsn6b67c2c0e67c',
 		'X-RapidAPI-Host': 'imdb8.p.rapidapi.com'
-	}
-};
-
-try {
-	const response = await fetch(`${url}${requiredParams}`, options);
-	if (response.ok) {
-        const jsonResponse = await response.json();
-        const movieTitle = jsonResponse.title;
-        console.log(movieTitle);
-        const moviePosterUrl = jsonResponse.image.url;
-        console.log(moviePosterUrl);
-        return randomMovieId;
+	    }
+    };
+    try {
+        const response = await fetch(`${url}${requiredParams}`, options);
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            const moviePosterTitle = jsonResponse;
+            console.log(moviePosterTitle.title);
+            console.log(moviePosterTitle.image.url);
+            return moviePosterTitle;
+        }
+    } catch (error) {
+        console.error(error);
     }
-} catch (error) {
-	console.error(error);
-}
 }
 
 // get Plot desription based on movie Id
 
 const getMoviePlot = async(randomMovieId) => {
+
     const url = 'https://imdb8.p.rapidapi.com/title/get-plots';
     const requiredParams =`?tconst=${randomMovieId}`;
-const options = {
-	method: 'GET',
-	headers: {
-		'X-RapidAPI-Key': 'e8ccc402c3msh3e9dc3e37473cbfp1c12c2jsn6b67c2c0e67c',
-		'X-RapidAPI-Host': 'imdb8.p.rapidapi.com'
-	}
-};
+    const options = {
+	    method: 'GET',
+	    headers: {
+		    'X-RapidAPI-Key': 'e8ccc402c3msh3e9dc3e37473cbfp1c12c2jsn6b67c2c0e67c',
+		    'X-RapidAPI-Host': 'imdb8.p.rapidapi.com'
+	    }
+    };
 
-try {
-	const response = await fetch(`${url}${requiredParams}`, options);
-	if (response.ok) {
-        const jsonResponse = await response.json();
-        const plotDescription = jsonResponse.plots[0].text;
-        console.log(plotDescription);
-        return plotDescription;
+    try {
+        const response = await fetch(`${url}${requiredParams}`, options);
+        if (response.ok) {
+            const jsonResponse = await response.json();
+            const plotDescription = jsonResponse.plots[0].text;
+            console.log(plotDescription);
+            return plotDescription;
+        }
+    } catch (error) {
+        console.error(error);
     }
-} catch (error) {
-	console.error(error);
-}
 }
 
 
@@ -126,14 +131,17 @@ try {
 // Create a field with the added moviePoster url
 
 const createPosterField = (moviePosterUrl) => {
-    const posterfield = document.createElement('img');
-    posterfield.setAttribute("id", "moviePoster");
-    posterfield.setAttribute("src", moviePosterUrl);
-    return posterfield;
+
+    const imageDiv = document.createElement('div');
+    imageDiv.setAttribute("id", "imageDiv");
+    imageDiv.innerHTML = `<img src = ${moviePosterUrl}>`
+    return imageDiv;
 }
 
 // Create a field with the added Movie Title
+
 const createTitleField = (movieTitle) => {
+
     const titleField = document.createElement('h2');
     titleField.setAttribute("id", "movieTitle");
     titleField.innerHTML = movieTitle
@@ -141,44 +149,50 @@ const createTitleField = (movieTitle) => {
 }
 
 // Create a field with the added movie Plot desription
+
 const createPlotField = (plotDescription) => {
+
     const plotField = document.createElement('p');
     plotField.setAttribute("id", "plotField");
     plotField.innerHTML = plotDescription;
     return plotField;
 }
 
-// A Function with Calls the Async Functions for the movie Data
-
-const getCompleteMovieData = async () => {
-    const movie = await randomMovieByGenre();
-    const movieDetails = await getMovieDetails(randomMovieId);
-    const plotInfo = await getMoviePlot(randomMovieId);
-}
 
 // A Function which puts all the information together and displays them in the MovieDiv
 
-const displayMovieData = () => {
+const displayMovieData = async () => {
+    
     // The Movie Div where the Poster, Title and Description get added
     const movieDiv = document.getElementById('movieDiv');
 
     // Call all Functions which are needed for the movie Data
-    getCompleteMovieData();
+    const movies = await GetMoviesByGenre();
+    const randomMovie = randomMovieId(movies);
+    const posterTitle = await getMovieDetails(randomMovie);
+    const plot = await getMoviePlot(randomMovie)
 
     // Call the Functions to create the fields and save them to variables
-    const poster = createPosterField(moviePosterUrl);
-    const title = createTitleField(movieTitle);
-    const description = createPlotField(plotDescription);
+    const poster = createPosterField(posterTitle.image.url);
+    const title = createTitleField(posterTitle.title);
+    const description = createPlotField(plot);
+    const overviewDiv = document.createElement('div');
+    overviewDiv.setAttribute("id", "overviewDiv")
+
 
     // Append the new fields to the movie Div
 
     movieDiv.appendChild(poster);
-    movieDiv.appendChild(title);
-    movieDiv.appendChild(description);
+    movieDiv.appendChild(overviewDiv);
+    overviewDiv.appendChild(title);
+    overviewDiv.appendChild(description);
 
 }
+
+const showMovieBtn = document.getElementById('submitBtn');
+
 
 
 // Function calls
 getGenres().then(createOptionElements);
-getCompleteMovieData();
+showMovieBtn.onclick = displayMovieData;
