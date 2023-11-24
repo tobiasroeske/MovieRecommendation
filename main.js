@@ -1,6 +1,6 @@
 
 
-// Get an array of Genres and append them to the select element
+// Get an array of Genres
 async function getGenres() {
     const url = 'https://imdb188.p.rapidapi.com/api/v1/getGenres';
     const options = {
@@ -16,17 +16,26 @@ async function getGenres() {
             if (response.ok) {
                 const jsonResponse = await response.json();
                 const genreArray = jsonResponse.data.all_genres;
-                genreArray.map((item) => {
-                    const genreItem = document.createElement('option');
-                    genreItem.innerHTML = item;
-                    genreSelector.appendChild(genreItem);
-                });
+                return genreArray;
             }
     } catch (error) {
         console.error(error);
     }
 }
-getGenres();
+// Create the option Elements for the Selector Element
+const createOptionElements = async (genreArray) => {
+    const genreSelector = document.getElementById('genreSelector');
+    const genres =  await genreArray.map((item) => {
+        let genreItem = document.createElement('option');
+        genreItem.setAttribute = ('id', 'genreOption');
+        genreItem.setAttribute = ('value', item);
+        genreItem.innerHTML= item;
+        genreSelector.appendChild(genreItem);
+
+    })
+    return genres;
+}
 
 
+getGenres().then(createOptionElements);
 
