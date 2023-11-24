@@ -27,8 +27,8 @@ const createOptionElements = async (genreArray) => {
     const genreSelector = document.getElementById('genreSelector');
     const genre =  await genreArray.map((item) => {
         let genreItem = document.createElement('option');
-        genreItem.setAttribute = ('id', 'genreOption');
-        genreItem.setAttribute = ('value', item);
+        genreItem.setAttribute = ("id", "genreOption");
+        genreItem.setAttribute = ("value", item);
         genreItem.innerHTML= item;
         genreSelector.appendChild(genreItem);
 
@@ -113,6 +113,7 @@ try {
         const jsonResponse = await response.json();
         const plotDescription = jsonResponse.plots[0].text;
         console.log(plotDescription);
+        return plotDescription;
     }
 } catch (error) {
 	console.error(error);
@@ -120,8 +121,64 @@ try {
 }
 
 
+
+
+// Create a field with the added moviePoster url
+
+const createPosterField = (moviePosterUrl) => {
+    const posterfield = document.createElement('img');
+    posterfield.setAttribute("id", "moviePoster");
+    posterfield.setAttribute("src", moviePosterUrl);
+    return posterfield;
+}
+
+// Create a field with the added Movie Title
+const createTitleField = (movieTitle) => {
+    const titleField = document.createElement('h2');
+    titleField.setAttribute("id", "movieTitle");
+    titleField.innerHTML = movieTitle
+    return titleField
+}
+
+// Create a field with the added movie Plot desription
+const createPlotField = (plotDescription) => {
+    const plotField = document.createElement('p');
+    plotField.setAttribute("id", "plotField");
+    plotField.innerHTML = plotDescription;
+    return plotField;
+}
+
+// A Function with Calls the Async Functions for the movie Data
+
+const getCompleteMovieData = async () => {
+    const movie = await randomMovieByGenre();
+    const movieDetails = await getMovieDetails(randomMovieId);
+    const plotInfo = await getMoviePlot(randomMovieId);
+}
+
+// A Function which puts all the information together and displays them in the MovieDiv
+
+const displayMovieData = () => {
+    // The Movie Div where the Poster, Title and Description get added
+    const movieDiv = document.getElementById('movieDiv');
+
+    // Call all Functions which are needed for the movie Data
+    getCompleteMovieData();
+
+    // Call the Functions to create the fields and save them to variables
+    const poster = createPosterField(moviePosterUrl);
+    const title = createTitleField(movieTitle);
+    const description = createPlotField(plotDescription);
+
+    // Append the new fields to the movie Div
+
+    movieDiv.appendChild(poster);
+    movieDiv.appendChild(title);
+    movieDiv.appendChild(description);
+
+}
+
+
+// Function calls
 getGenres().then(createOptionElements);
-randomMovieByGenre().then(getMovieDetails)
-.then(getMoviePlot);
-
-
+getCompleteMovieData();
