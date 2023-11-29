@@ -15,6 +15,12 @@
 <script defer src="main.js"></script>
 </head>
 <body>
+    <div class="nav">
+        <div class="watchList">
+            <p>Watchlist</p>
+            <i class="fa-solid fa-list fa-2x" style="color: #ffffff;" id="watchlistBtn"></i>
+        </div>
+    </div>
     <div class="header" id="headerMobile">
         <h1>What to watch tonight</h1>
     </div>
@@ -27,14 +33,18 @@
             </select>
             <br>
         </form>
-            <button class="submit" id="submitBtn">Find a movie</button>
+        <button class="submit" id="submitBtn">Find a movie</button>
         
     </div>
     
     <div class="movieDiv" id="movieDiv">
-
+        <div class="movieOne" id="movieOne"></div>
+        <div class="movieTwo" id="movieTwo"></div>
+        <div class="movieThree" id="movieThree"></div>
+        <div class="movieFour" id="movieFour"></div>
+        <div class="movieFive" id="movieFive"></div>
     </div>
-    <div class="buttons">
+    <!-- <div class="buttons">
         <div class="dislike">
             <p>Dislike movie</p>
             <i class="fa-regular fa-thumbs-down fa-4x" style="color: #ffffff;" id="dislikeBtn"></i>
@@ -47,7 +57,7 @@
             <p>Show Watchlist</p>
             <i class="fa-solid fa-list fa-4x" style="color: #ffffff;" id="watchlistBtn"></i>
         </div>
-        </div>
+    </div> -->
        
 </body>
 </html>
