@@ -39,9 +39,11 @@ const createOptionElements = async (genreArray) => {
 }
 
 // Get a random Movie depending on Genre
+//2.0 Picks random movie out of the first 20 pages (sorted by genre and popularity)
 
 const getMoviesByGenre = async () => {
-    const page = 1; // will be changed in a later
+    const randomPage = Math.floor(Math.random() * 20);
+    const page = randomPage; 
     const baseUrl = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`
     const genreSelector = document.getElementById('genreSelector');
     const genre = genreSelector.ariaValueMax;
@@ -59,11 +61,17 @@ const getMoviesByGenre = async () => {
     
    
     try {
-        const response = await fetch(`${baseUrl}${requiredParams}`, options);
-        if (response.ok) {
-            const movies = await response.json();
-            return movies;
+        const movieArray = [];
+        for (let i = 0; i <= 5; i++) {
+            const response = await fetch(`${baseUrl}${requiredParams}`, options);
+            if (response.ok) {
+                const movies = await response.json();
+                movieArray.push(movies);
+            }
+            
         }
+        console.log(movieArray);
+        return movieArray;
     } catch(err) {
         console.log(err);
     }
@@ -75,14 +83,16 @@ const getMoviesByGenre = async () => {
 
 // get random movie
 
-const randomMovieId = (movies) =>{
-    const randomMovieIndex = Math.floor(Math.random() * movies.results.length);
-    console.log(randomMovieIndex)
-    const randomMovie = movies.results[randomMovieIndex]
-    const randomMovieId = randomMovie.id;
-    return randomMovieId;
-
+const randomMovieIds = (movieArray) =>{
     
+    const randomMovieIdArray = movieArray.map((movie) => { 
+        let randomMovieIndex = Math.floor(Math.random() * movie.results.length);
+        let randomMovie = movie.results[randomMovieIndex];
+        let randomMovieId = randomMovie.id;
+        return randomMovieId;
+        })
+        console.log(randomMovieIdArray);
+    return randomMovieIdArray;
 }
 
 
@@ -90,7 +100,7 @@ const randomMovieId = (movies) =>{
 
 // Get Movie title and poster url depending on Movie ID
 
-const getMovieDetails = async (randomMovieId) => {
+const getMovieDetails = async (randomMovieIdArray) => {
 
     const baseUrl = 'https://api.themoviedb.org/3/movie/'
     requiredParams = '?language=en-US'
@@ -102,16 +112,20 @@ const getMovieDetails = async (randomMovieId) => {
         }
       };
       try {
-        const response = await fetch(`${baseUrl}${randomMovieId}${requiredParams}`, options);
-        if (response.ok) {
-            const movieInfo = await response.json();
-            return movieInfo;
+        const movieInfoArray = [];
+        for (let i = 0; i <= randomMovieIdArray.length - 1; i++) {
+            const response = await fetch(`${baseUrl}${randomMovieIdArray[i]}${requiredParams}`, options);
+            if (response.ok) {
+                let movieInfo = await response.json();
+                movieInfoArray.push(movieInfo);
+            }
         }
+        console.log(movieInfoArray);
+        return movieInfoArray;
+        
       } catch(err) {
         console.log(err);
       }
-      
-    
 }
 
 
@@ -119,10 +133,9 @@ const getMovieDetails = async (randomMovieId) => {
 
 const createPosterField = (moviePosterUrl) => {
     const posterBaseUrl = 'https://image.tmdb.org/t/p/original/'
-    const imageDiv = document.createElement('div');
-    imageDiv.setAttribute("id", "imageDiv");
-    imageDiv.innerHTML = `<img src=${posterBaseUrl}${moviePosterUrl}>`;
-    return imageDiv;
+    const image = document.createElement('img');
+    image.setAttribute("src", `${posterBaseUrl}${moviePosterUrl}`);
+    return image;
 }
 
 const createTitleField = (movieTitle) => {
@@ -144,35 +157,26 @@ const createPlotField = (plotDescription) => {
 }
 
 
-const displayMovie = (movieInfo) => {
-    const movieTitle = movieInfo.title;
-    const moviePlotDescription = movieInfo.overview;
+const displayMovie = (movieInfoArray) => {
+    
+    for (let i = 0; i < 5; i++) {
 
-    // Call the Functions to create the fields and save them to variables
-    const poster = createPosterField(movieInfo.poster_path);
-    const title = createTitleField(movieTitle);
-    const description = createPlotField(moviePlotDescription);
-    const overviewDiv = document.createElement('div');
-    overviewDiv.setAttribute("id", "overviewDiv")
+        let movieTitle = movieInfoArray[i].title;
+        let poster = createPosterField(movieInfoArray[i].poster_path);
+        let title = createTitleField(movieTitle)
 
-
-    // Append the new fields to the movie Div
-
-    movieDiv.appendChild(poster);
-    movieDiv.appendChild(overviewDiv);
-    overviewDiv.appendChild(title);
-    overviewDiv.appendChild(description);
+        let movieDiv = document.getElementById(`movie-${i + 1}`);
+        movieDiv.appendChild(poster);
+        movieDiv.appendChild(title);
+    }
 }
 // A Function which puts all the information together and displays them in the MovieDiv
 
 const getRandomMovie = async () => {
-    
-    // The Movie Div where the Poster, Title and Description get added
-    const movieDiv = document.getElementById('movieDiv');
 
     // Call all Functions which are needed for the movie Data
     const movies = await getMoviesByGenre();
-    const randomMovie = randomMovieId(movies);
+    const randomMovie = randomMovieIds(movies);
     const movieInfo = await getMovieDetails(randomMovie);
 
     displayMovie(movieInfo);
@@ -188,4 +192,9 @@ findMovieBtn.addEventListener('click', () => {
     getRandomMovie();
 })
 
+// Calls for finding error
 
+// getMoviesByGenre()
+// .then(randomMovieIds)
+// .then(getMovieDetails)
+// .then(displayMovie);
