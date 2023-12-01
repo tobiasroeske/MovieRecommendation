@@ -84,13 +84,19 @@ const getMoviesByGenre = async () => {
 // get random movie
 
 const randomMovieIds = (movieArray) =>{
-    
-    const randomMovieIdArray = movieArray.map((movie) => { 
-        let randomMovieIndex = Math.floor(Math.random() * movie.results.length);
-        let randomMovie = movie.results[randomMovieIndex];
-        let randomMovieId = randomMovie.id;
-        return randomMovieId;
+    const randomMovieIdArray = [];
+
+    while (randomMovieIdArray.length <=5) {
+        movieArray.forEach((movie) => {
+            let randomMovieIndex = Math.floor(Math.random() * movie.results.length);
+            let randomMovie = movie.results[randomMovieIndex];
+            let randomMovieId = randomMovie.id;
+            if (!randomMovieIdArray.includes(randomMovieId)) {
+                randomMovieIdArray.push(randomMovieId)
+            }
         })
+    }
+   
         console.log(randomMovieIdArray);
     return randomMovieIdArray;
 }
