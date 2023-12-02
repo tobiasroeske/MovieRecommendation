@@ -164,7 +164,7 @@ const createPlotField = (plotDescription) => {
 
 
 const displayMovie = (movieInfoArray) => {
-    
+    const mainMovieDiv = document.getElementById('movieDiv');
     for (let i = 0; i < 5; i++) {
 
         let movieTitle = movieInfoArray[i].title;
@@ -174,6 +174,16 @@ const displayMovie = (movieInfoArray) => {
         let movieDiv = document.getElementById(`movie-${i + 1}`);
         movieDiv.appendChild(poster);
         movieDiv.appendChild(title);
+    }
+    mainMovieDiv.style.display = 'grid';
+}
+// Clears display before calling all the other functions
+const clearDisplay = () => {
+    const mainMovieDiv = document.getElementById('movieDiv');
+    mainMovieDiv.style.display =  'none';
+    for (let i = 1; i <= 5; i++) {
+        let movieDiv = document.getElementById(`movie-${i}`);
+        movieDiv.innerHTML = "";
     }
 }
 // A Function which puts all the information together and displays them in the MovieDiv
@@ -186,6 +196,7 @@ const getRandomMovie = async () => {
     const movieInfo = await getMovieDetails(randomMovie);
 
     displayMovie(movieInfo);
+
 }
 
 // Function calls 
@@ -195,6 +206,7 @@ getGenres().then(createOptionElements);
 const findMovieBtn = document.getElementById('submitBtn');
 
 findMovieBtn.addEventListener('click', () => {
+    clearDisplay();
     getRandomMovie();
 })
 

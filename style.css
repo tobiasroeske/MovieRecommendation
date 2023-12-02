@@ -104,7 +104,7 @@ box-shadow: 0px 10px 13px -7px #313030, inset 0px 0px 5px 4px rgba(101,101,101,0
 }
 
 .movieDiv {
-    display: grid;
+    display: none;
     grid-template-columns: repeat(5, 1fr);
     column-gap: 0.75rem;
     width: 100%;
@@ -115,18 +115,29 @@ box-shadow: 0px 10px 13px -7px #313030, inset 0px 0px 5px 4px rgba(101,101,101,0
     padding: 2rem 2rem 2rem 2rem;
     font-family: 'Noto Sans JP', sans-serif;
     color: #fff;
-    background: #272626;
 }
 
 .movie-1, .movie-2, .movie-3, .movie-4, .movie-5 {
     display: block;
     text-align: center;
+    transition: transform .2s;
+    
+}
+
+.movie-1:hover, .movie-2:hover, .movie-3:hover, .movie-4:hover, .movie-5:hover {
+    cursor: pointer;
+    transform: scale(1.1);
 }
 
 .movieDiv img {
     object-fit: cover;
     width: 100%;
     height: auto;
+    background-color: #313030;
+    padding: 3px;
+    margin: 4px;
+    border: 1px solid #242222;
+    border-radius: 15px;
 }
 
 
