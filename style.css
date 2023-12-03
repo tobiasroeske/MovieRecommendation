@@ -126,7 +126,7 @@ box-shadow: 0px 10px 13px -7px #313030, inset 0px 0px 5px 4px rgba(101,101,101,0
 
 .movie-1:hover, .movie-2:hover, .movie-3:hover, .movie-4:hover, .movie-5:hover {
     cursor: pointer;
-    transform: scale(1.1);
+    transform: scale(1.2);
 }
 
 .movieDiv img {

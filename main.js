@@ -46,7 +46,8 @@ const getMoviesByGenre = async () => {
     const page = randomPage; 
     const baseUrl = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`
     const genreSelector = document.getElementById('genreSelector');
-    const genre = genreSelector.ariaValueMax;
+    const genre = genreSelector.value;
+    console.log(genre);
     const requiredParams = `&with_genres=${genre}`
     
     
@@ -154,12 +155,22 @@ const createTitleField = (movieTitle) => {
 
 // Create a field with the added movie Plot desription
 
-const createPlotField = (plotDescription) => {
+const createPlotField = (plotDescription, movieNum) => {
 
     const plotField = document.createElement('p');
-    plotField.setAttribute("id", "plotField");
+    plotField.setAttribute("id", `plotfield-${movieNum}`);
     plotField.innerHTML = plotDescription;
+    plotField.style.display = 'none';
     return plotField;
+}
+// Click on movie should give out additional information like release date, runtime and plot description
+const createAdditionalInfo = (releaseDate, runtime, movieNum) => {
+
+    const additionalInfoField = document.createElement('div');
+    additionalInfoField.setAttribute("id", `additionalInfo-${movieNum}`);
+    additionalInfoField.innerHTML = `<p>Release Date: ${releaseDate}</p><br><p>Runtime: ${runtime} min</p>`;
+    additionalInfoField.style.display = 'none';
+    return additionalInfoField;
 }
 
 
@@ -170,13 +181,41 @@ const displayMovie = (movieInfoArray) => {
         let movieTitle = movieInfoArray[i].title;
         let poster = createPosterField(movieInfoArray[i].poster_path);
         let title = createTitleField(movieTitle)
+        let plotDescription = createPlotField(movieInfoArray[i].overview, [i+1]);
+        let additionalInfo = createAdditionalInfo(movieInfoArray[i].release_date, movieInfoArray[i].runtime, [i+1]);
 
         let movieDiv = document.getElementById(`movie-${i + 1}`);
         movieDiv.appendChild(poster);
         movieDiv.appendChild(title);
+        movieDiv.appendChild(plotDescription);
+        movieDiv.appendChild(additionalInfo);
+
     }
     mainMovieDiv.style.display = 'grid';
 }
+// A function which desplays the extra Info of the movie. It is later used in an eventlistener
+const toggleAdditionalInfo = (movieNum) => {
+    const plot = document.getElementById(`plotfield-${movieNum}`);
+    const additionalInfo = document.getElementById(`additionalInfo-${movieNum}`);
+    if (plot.style.display === 'none') {
+        plot.style.display = 'block';
+        additionalInfo.style.display = 'block';
+    } else {
+        plot.style.display = 'none';
+        additionalInfo.style.display = 'none';
+    }
+        
+}
+// A Function which hides the extra Info for each movie
+const hideAdditionalInfo = (movieNum) => {
+    const plot = document.getElementById(`plotfield-${movieNum}`);
+    const additionalInfo = document.getElementById(`additionalInfo-${movieNum}`);
+
+    plot.style.display = 'none';
+    additionalInfo.style.display = 'none';
+
+}
+
 // Clears display before calling all the other functions
 const clearDisplay = () => {
     const mainMovieDiv = document.getElementById('movieDiv');
@@ -199,16 +238,54 @@ const getRandomMovie = async () => {
 
 }
 
-// Function calls 
-getGenres().then(createOptionElements);
+// Add event Listeners
+const addEventListeners = () => {
 
-
-const findMovieBtn = document.getElementById('submitBtn');
-
-findMovieBtn.addEventListener('click', () => {
+    // Click event for the search button
+    const findMovieBtn = document.getElementById('submitBtn');
+    findMovieBtn.addEventListener('click', () => {
     clearDisplay();
     getRandomMovie();
 })
+    // click events for the movie
+
+    const movie1 = document.getElementById('movie-1');
+    const movie2 = document.getElementById('movie-2');
+    const movie3 = document.getElementById('movie-3');
+    const movie4 = document.getElementById('movie-4');
+    const movie5 = document.getElementById('movie-5');
+
+    // Need better logic!!!
+
+    movie1.addEventListener('click', () => {
+        toggleAdditionalInfo(1);
+    });
+
+    movie2.addEventListener('click', () => {
+        toggleAdditionalInfo(2);
+    });
+    
+    movie3.addEventListener('click', () => {
+        toggleAdditionalInfo(3);
+    });
+
+    movie4.addEventListener('click', () => {
+        toggleAdditionalInfo(4);
+    });
+
+    movie5.addEventListener('click', () => {
+        toggleAdditionalInfo(5);
+    });
+    }
+
+
+    
+
+
+// Function calls 
+getGenres().then(createOptionElements);
+addEventListeners();
+
 
 // Calls for finding error
 
