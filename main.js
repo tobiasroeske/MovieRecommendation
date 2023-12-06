@@ -157,9 +157,10 @@ const createTitleField = (movieTitle) => {
 
 const createPlotField = (plotDescription, movieNum) => {
 
-    const plotField = document.createElement('p');
+    const plotField = document.createElement('div');
+    plotField.setAttribute("class", 'plotfieldDiv');
     plotField.setAttribute("id", `plotfield-${movieNum}`);
-    plotField.innerHTML = plotDescription;
+    plotField.innerHTML = `<p>${plotDescription}</p>`;
     plotField.style.display = 'none';
     return plotField;
 }
@@ -167,8 +168,9 @@ const createPlotField = (plotDescription, movieNum) => {
 const createAdditionalInfo = (releaseDate, runtime, movieNum) => {
 
     const additionalInfoField = document.createElement('div');
+    additionalInfoField.setAttribute("class", "additionalInfoDiv");
     additionalInfoField.setAttribute("id", `additionalInfo-${movieNum}`);
-    additionalInfoField.innerHTML = `<p>Release Date: ${releaseDate}</p><br><p>Runtime: ${runtime} min</p>`;
+    additionalInfoField.innerHTML = `<p>Release Date: ${releaseDate}</p><p>Runtime: ${runtime} min</p>`;
     additionalInfoField.style.display = 'none';
     return additionalInfoField;
 }
@@ -181,8 +183,8 @@ const displayMovie = (movieInfoArray) => {
         let movieTitle = movieInfoArray[i].title;
         let poster = createPosterField(movieInfoArray[i].poster_path);
         let title = createTitleField(movieTitle)
-        let plotDescription = createPlotField(movieInfoArray[i].overview, [i+1]);
-        let additionalInfo = createAdditionalInfo(movieInfoArray[i].release_date, movieInfoArray[i].runtime, [i+1]);
+        let plotDescription = createPlotField(movieInfoArray[i].overview, `movie${[i+1]}`);
+        let additionalInfo = createAdditionalInfo(movieInfoArray[i].release_date, movieInfoArray[i].runtime,`movie${[i+1]}`);
 
         let movieDiv = document.getElementById(`movie-${i + 1}`);
         movieDiv.appendChild(poster);
@@ -195,8 +197,8 @@ const displayMovie = (movieInfoArray) => {
 }
 // A function which desplays the extra Info of the movie. It is later used in an eventlistener
 const toggleAdditionalInfo = (movieNum) => {
-    const plot = document.getElementById(`plotfield-${movieNum}`);
-    const additionalInfo = document.getElementById(`additionalInfo-${movieNum}`);
+    let plot = document.getElementById(`plotfield-${movieNum}`);
+    let additionalInfo = document.getElementById(`additionalInfo-${movieNum}`);
     if (plot.style.display === 'none') {
         plot.style.display = 'block';
         additionalInfo.style.display = 'block';
@@ -206,15 +208,7 @@ const toggleAdditionalInfo = (movieNum) => {
     }
         
 }
-// A Function which hides the extra Info for each movie
-const hideAdditionalInfo = (movieNum) => {
-    const plot = document.getElementById(`plotfield-${movieNum}`);
-    const additionalInfo = document.getElementById(`additionalInfo-${movieNum}`);
 
-    plot.style.display = 'none';
-    additionalInfo.style.display = 'none';
-
-}
 
 // Clears display before calling all the other functions
 const clearDisplay = () => {
@@ -255,27 +249,14 @@ const addEventListeners = () => {
     const movie4 = document.getElementById('movie-4');
     const movie5 = document.getElementById('movie-5');
 
-    // Need better logic!!!
+    const movieArr = [movie1, movie2, movie3, movie4, movie5]
 
-    movie1.addEventListener('click', () => {
-        toggleAdditionalInfo(1);
-    });
 
-    movie2.addEventListener('click', () => {
-        toggleAdditionalInfo(2);
-    });
-    
-    movie3.addEventListener('click', () => {
-        toggleAdditionalInfo(3);
-    });
-
-    movie4.addEventListener('click', () => {
-        toggleAdditionalInfo(4);
-    });
-
-    movie5.addEventListener('click', () => {
-        toggleAdditionalInfo(5);
-    });
+    for (let i = 0; i < 5; i++) {
+        movieArr[i].addEventListener('click', () => {
+            toggleAdditionalInfo(`movie${i+1}`);
+        })
+        }
     }
 
 
@@ -286,10 +267,3 @@ const addEventListeners = () => {
 getGenres().then(createOptionElements);
 addEventListeners();
 
-
-// Calls for finding error
-
-// getMoviesByGenre()
-// .then(randomMovieIds)
-// .then(getMovieDetails)
-// .then(displayMovie);
